@@ -1,0 +1,22 @@
+{
+  "name": "monarco",
+  "version": "1.0.0",
+  "description": "Node.js Library for Monarco HAT",
+  "main": "./src/monarco.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "monarco",
+    "hat",
+    "raspberry"
+  ],
+  "author": "Jiří Faist",
+  "license": "BSD 3-Clause License",
+  "dependencies": {
+    "crc": "^3.4.0",
+    "rpio": "^0.9.12",
+    "spi": "^0.2.0",
+    "spi-device": "^0.2.3"
+  }
+}
