@@ -1,6 +1,6 @@
 # monarco-nodejs - Node.js driver library for Monarco HAT
 
-VERSION: 1.0, FIRMWARE: 2.005
+VERSION: 1.1, FIRMWARE: 2.006
 
 ### Getting started
 The most comprehensive way how to get into using the Node.js library for Monarco HAT is to examine **application example in file `index.js`** in root directory.
@@ -25,7 +25,7 @@ sudo apt install git
 
 Clone the repository:
 ```
-git clone git@github.com:monarco/monarco-hat-driver-nodejs.git
+git clone https://github.com/monarco/monarco-hat-driver-nodejs.git
 ```
 
 Change working directory:

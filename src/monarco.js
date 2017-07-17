@@ -122,8 +122,7 @@ class Monarco extends events.EventEmitter {
 						}, this._period);
 					}
 				} else {
-					clearInterval(this._loopTimer);
-					throw new Error('Failed CRC Check failed on received message.');
+					this.emit('err', 'Failed CRC Check on received message.');					
 				}
 			}
 		});
