@@ -1,5 +1,5 @@
 {
-  "name": "monarco",
+  "name": "monarco-hat",
   "version": "1.0.0",
   "description": "Node.js Library for Monarco HAT",
   "main": "./src/monarco.js",
@@ -11,12 +11,14 @@
     "hat",
     "raspberry"
   ],
-  "author": "Jiří Faist",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/monarco/monarco-hat-driver-nodejs.git"
+  },
+  "author": "Jiri Faist",
   "license": "BSD 3-Clause License",
   "dependencies": {
     "crc": "^3.4.0",
-    "rpio": "^0.9.12",
-    "spi": "^0.2.0",
-    "spi-device": "^0.2.3"
+    "spi-device": "^2.0.0"
   }
 }

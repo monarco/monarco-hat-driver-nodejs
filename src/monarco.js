@@ -23,22 +23,22 @@ class Monarco extends events.EventEmitter {
 		}
 
 		this.digitalOutputs = [false, false, false, false];
-		this.analogOutputs = [0, 0]; // 0 - 4095
+		this.analogOutputs = [0, 0]; // 0 - 10[V]
 
 		this.analogInputsInVoltageMode = [];
 		this.analogInputsInVoltageMode[0] = true;
 		this.analogInputsInVoltageMode[1] = true;
 
-		this.pwm1a = 0;
-		this.pwm1b = 0;
-		this.pwm1c = 0;
-		this.pwm2a = 0;
+		this.pwm1a = 0; // 0-1
+		this.pwm1b = 0; // 0-1
+		this.pwm1c = 0; // 0-1
+		this.pwm2a = 0; // 0-1
 
 		this.pwm1Freq = 0;
 		this.pwm2Freq = 0;
 
-		this.ain1Mode = 1; // 1 -> 0-10V; 2 -> 0-20mA
-		this.ain2Mode = 1; // 1 -> 0-10V; 2 -> 0-20mA
+		this.ain1Mode = 1; // 1 -> 0-10[V]; 2 -> 0-20[mA]
+		this.ain2Mode = 1; // 1 -> 0-10[V]; 2 -> 0-20[mA]
 		this.inService = 0;
 		this.rs485_baudrate = 9600;
 		this.rs485_parity = 1; // 1:none; 2:even; 3:odd

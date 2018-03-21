@@ -1,4 +1,4 @@
-# monarco-nodejs - Node.js driver library for Monarco HAT
+# monarco-hat - Node.js driver library for Monarco HAT
 
 VERSION: 1.1, FIRMWARE: 2.006
 
@@ -13,10 +13,23 @@ sudo apt install build-essential
 
 Install Node.js on your Raspbian running on Raspberry Pi:
 ```
-curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
 sudo apt install -y nodejs
 ```
 Follow this link for more information: [Installing Node.js via package manager](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions)
+
+### Acquiring the package
+There are two different ways how to obtain the package. Either a git repository with the code can be cloned or the package can be installed from *npm* registry.
+
+#### Install the package using *npm* registry
+Install the package:
+```
+npm install monarco
+```
+If installed correctly the package is located in `./node-modules/monarco/`.
+
+#### Cloning the repository
+Cloning the repository should be only used if the *npm* registry is not available or it is not desirable to use the *Node.js* package ecosystem.
 
 Install Git:
 ```
@@ -38,7 +51,9 @@ Install dependencies in the cloned repository:
 sudo npm install
 ```
 
-Run the demo:
+#### Run the demo:
+To run the demo first change the current working directory to the location where the package is installed and then execute the example application:
+
 ```
 sudo npm start
 
@@ -68,9 +83,8 @@ This example code runs in 70 ms cyclic loop. Initial values of important service
 For demonstration, `AOUT1` is driven by constant 2.0 Volts, `AOUT2` is driven by sinusoidal signal between 1.0 Volts and 9.0 Volts. Digital outputs `DOUT3` and `DOUT4` simulate quadrature encoder signal.
 For the test, it is expected you connected together AIN1<>AOUT1, AIN2<>AOUT2, DIN3<>DOUT3, DIN4<>DOUT4. COUNTER2 module is switched to quadrature decoder mode.
 
-
 ## License
 
-monarco-nodejs and examples provided in this repository are covered by the BSD 3-Clause License. See LICENSE.txt or https://opensource.org/licenses/BSD-3-Clause
+monarco-hat package and examples provided in this repository are covered by the BSD 3-Clause License. See LICENSE.txt or https://opensource.org/licenses/BSD-3-Clause
 
-Copyright REX Controls s.r.o. http://www.rexcontrols.com, Author: Vlastimil Setka, <setka@rexcontrols.com>
+Copyright REX Controls s.r.o. http://www.rexcontrols.com, Author: Jiri Faist, <faist@rexcontrols.com>
