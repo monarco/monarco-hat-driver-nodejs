@@ -12,7 +12,7 @@ var SDC_CONSTANTS = require('./sdc_constants.js');
 class Monarco extends events.EventEmitter {
 	constructor() {
 		super();
-		
+
 		this.SDC = SDC_CONSTANTS;
 
 		this._period = 70; // x[ms], 100ms is limit to activate watchdog		
@@ -74,6 +74,12 @@ class Monarco extends events.EventEmitter {
 		return cmd;
 	}
 
+	close(done) {
+		clearTimeout(this._timer);
+		this._timer = null;
+		this._spi.close(done);
+	}
+
 	run() {
 		var txbuf = this._createTxBuffer();
 		var rxbuf = new Buffer(txbuf.length);
@@ -89,7 +95,7 @@ class Monarco extends events.EventEmitter {
 
 		this._spi.transfer(message, (err, message) => {
 			if (err) {
-				throw err;
+				this.emit('err', err);
 			} else {
 				var rxBuf = message[0].receiveBuffer;
 
@@ -122,7 +128,7 @@ class Monarco extends events.EventEmitter {
 						}, this._period);
 					}
 				} else {
-					this.emit('err', 'Failed CRC Check on received message.');					
+					this.emit('err', 'Failed CRC Check on received message.', rxBuf);
 				}
 			}
 		});
@@ -133,10 +139,10 @@ class Monarco extends events.EventEmitter {
 		txbuf.fill(0x00);
 
 		// data service
-		if (this._fifoSvcTasks.length > 0 && this._currSvcTask === null) {			
+		if (this._fifoSvcTasks.length > 0 && this._currSvcTask === null) {
 
 			this.serviceData[0].register = (this.inService >> 16) & 0xFFFF;
-			this.serviceData[0].value = this.inService & 0xFFFF;			
+			this.serviceData[0].value = this.inService & 0xFFFF;
 
 			if ((this.rs485_baudrate / 100) !== this.serviceData[7].value) {
 				this.serviceData[7].value = (this.rs485_baudrate / 100);
@@ -147,7 +153,7 @@ class Monarco extends events.EventEmitter {
 				this.serviceData[8].value = rs485cfg;
 			}
 
-			var mnccfg = ((this.rs485_term_enable === 1) ? 1 : 0) + ((this.ain1Mode === 2) ? 2 : 0) + ((this.ain2Mode === 2) ? 4 : 0);
+			var mnccfg = ((this.rs485_term_enable === 1) ? 1 : 0) + ((this.analogInputsInVoltageMode[0] === false) ? 2 : 0) + ((this.analogInputsInVoltageMode[1] === false) ? 4 : 0);
 			if (mnccfg !== this.serviceData[9].value) {
 				this.serviceData[9].value = mnccfg;
 			}
@@ -225,11 +231,19 @@ class Monarco extends events.EventEmitter {
 		return txbuf;
 	}
 
-	setAnalogInputMode(id, value) {
+	setAnalogInputModeToVoltage(id) {
 		if (id === 1) {
-			this.analogInputsInVoltageMode[0] = value;
+			this.analogInputsInVoltageMode[0] = true;
 		} else if (id === 2) {
-			this.analogInputsInVoltageMode[1] = value;
+			this.analogInputsInVoltageMode[1] = true;
+		}
+	}
+
+	setAnalogInputModeToCurrent(id) {
+		if (id === 1) {
+			this.analogInputsInVoltageMode[0] = false;
+		} else if (id === 2) {
+			this.analogInputsInVoltageMode[1] = false;
 		}
 	}
 
@@ -249,7 +263,7 @@ class Monarco extends events.EventEmitter {
 
 	_initSvcTable() {
 		var i = 0;
-	    
+
 		this.serviceData[i] = {};
 		this.serviceData[i].register = 0x00; // status word | user defined
 		this.serviceData[i].value = -1;
@@ -274,7 +288,7 @@ class Monarco extends events.EventEmitter {
 		this.serviceData[i].register = 0x04; // hw high ver
 		this.serviceData[i].value = -1;
 		i++;
-		
+
 		this.serviceData[i] = {};
 		this.serviceData[i].register = 0x05; // cpuid1
 		this.serviceData[i].value = -1;
@@ -345,10 +359,10 @@ class Monarco extends events.EventEmitter {
 function convertAnalogOutput(dac) {
 	var out;
 	if (dac >= 10) {
-		console.warn('Analog output is set to invalid value. Valid values are 0..10 V.');
+		this.emit('warn', 'Analog output is set to invalid value. Valid values are 0..10 V.');
 		out = 4095;
 	} else if (dac < 0) {
-		console.warn('Analog output is set to invalid value. Valid values are 0..10 V.');
+		this.emit('warn', 'Analog output is set to invalid value. Valid values are 0..10 V.');
 		out = 0;
 	} else {
 		out = Math.floor(((dac * 4095) / 10));
