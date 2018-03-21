@@ -1,6 +1,6 @@
 # monarco-hat - Node.js driver library for Monarco HAT
 
-VERSION: 1.1, FIRMWARE: 2.006
+Compatible Monarco HAT firmware version: 2.006
 
 ### Getting started
 The most comprehensive way how to get into using the Node.js library for Monarco HAT is to examine **application example in file `index.js`** in root directory.
