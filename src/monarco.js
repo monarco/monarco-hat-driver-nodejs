@@ -118,19 +118,14 @@ class Monarco extends events.EventEmitter {
 							this._currSvcTask = null;
 						}
 					}
-
 					this.emit('rx', rxdata);
-					if (this._fifoSvcTasks.length > 0) {
-						this.run();
-					} else {
-						this._timer = setTimeout(() => {
-							this.run();
-						}, this._period);
-					}
 				} else {
 					this.emit('err', 'Failed CRC Check on received message.', rxBuf);
 				}
 			}
+			this._timer = setTimeout(() => {
+				this.run();
+			}, this._fifoSvcTasks.length > 0 ? 0 : this._period);
 		});
 	}
 
@@ -326,6 +321,11 @@ class Monarco extends events.EventEmitter {
 
 		this.serviceData[i] = {};
 		this.serviceData[i].register = 0x19; // rx err parity
+		this.serviceData[i].value = -1;
+		i++;
+
+		this.serviceData[i] = {};
+		this.serviceData[i].register = 0x100F; // watchdog timeout
 		this.serviceData[i].value = -1;
 		i++;
 

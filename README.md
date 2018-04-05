@@ -24,9 +24,9 @@ There are two different ways how to obtain the package. Either a git repository 
 #### Install the package using *npm* registry
 Install the package:
 ```
-npm install monarco
+npm install monarco-hat
 ```
-If installed correctly the package is located in `./node-modules/monarco/`.
+If installed correctly the package is located in `./node-modules/monarco-hat/`.
 
 #### Cloning the repository
 Cloning the repository should be only used if the *npm* registry is not available or it is not desirable to use the *Node.js* package ecosystem.
@@ -48,14 +48,14 @@ cd monarco-hat-driver-nodejs
 
 Install dependencies in the cloned repository:
 ```
-sudo npm install
+npm install
 ```
 
 #### Run the demo:
 To run the demo first change the current working directory to the location where the package is installed and then execute the example application:
 
 ```
-sudo npm start
+npm start
 
 ### Monarco HAT Node.js library demo example v1.0
 

@@ -10,6 +10,7 @@ var SDC_FIXED_CPUID3 = 7;
 var SDC_FIXED_CPUID4 = 8;
 var SDC_FIXED_RS485BAUD = 0x1010;
 var SDC_FIXED_RS485MODE = 0X1011;
+var SDC_FIXED_WATCHDOG = 0X100F;
 var SDC_FIXED_CNT1MODE = 0x1024;
 var SDC_FIXED_CNT2MODE = 0x1025;
 
@@ -29,9 +30,14 @@ setRegValue(monarco.serviceData, SDC_FIXED_CNT1MODE, monarco.SDC.MONARCO_SDC_COU
 setRegValue(monarco.serviceData, SDC_FIXED_CNT2MODE, monarco.SDC.MONARCO_SDC_COUNTER_MODE_QUAD);
 setRegValue(monarco.serviceData, SDC_FIXED_RS485BAUD, 384);
 setRegValue(monarco.serviceData, SDC_FIXED_RS485MODE, monarco.SDC.MONARCO_SDC_RS485_DEFAULT_MODE);
+setRegValue(monarco.serviceData, SDC_FIXED_WATCHDOG, 1000);
 
-monarco.on('err', (err) => {
+
+monarco.on('err', (err, msg) => {
 	console.log('ERROR: ' + err);
+	if(msg){
+		console.log('Message: ' + msg.toString('hex'));
+	}
 });
 
 monarco.init().then(() => {
