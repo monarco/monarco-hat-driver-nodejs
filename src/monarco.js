@@ -15,7 +15,7 @@ class Monarco extends events.EventEmitter {
 
 		this.SDC = SDC_CONSTANTS;
 
-		this._period = 70; // x[ms], 100ms is limit to activate watchdog		
+		this._period = 50; // x[ms], 100ms is the default limit to activate watchdog		
 
 		this.LEDs = [];
 		for (let i = 0; i < 8; i++) {
@@ -47,6 +47,8 @@ class Monarco extends events.EventEmitter {
 
 		this.serviceData = [];
 
+		this.cnt1reset = false;
+		this.cnt2reset = false;
 
 		this._fifoSvcTasks = [];
 		this._currSvcTask = null;
@@ -161,7 +163,15 @@ class Monarco extends events.EventEmitter {
 			txbuf[3] = (this.serviceData[index].register >> 8) & 0xFF;
 		}
 
-		// TODO control byte
+		// control byte
+		if(this.cnt1reset){
+			txbuf[4] = txbuf[4] | (1 << 4);
+			this.cnt1reset = false;
+		}
+		if(this.cnt2reset){
+			txbuf[4] = txbuf[4] | (1 << 5);
+			this.cnt2reset = false;
+		}
 
 		// LEDs		
 		for (let i = 0; i < 8; i++) {
@@ -181,8 +191,8 @@ class Monarco extends events.EventEmitter {
 		}
 
 		// PWM
-		var pwm1Div = pwmFreqToDiv(this.pwm1Freq);
-		var pwm2Div = pwmFreqToDiv(this.pwm2Freq);
+		var pwm1Div = this._pwmFreqToDiv(this.pwm1Freq);
+		var pwm2Div = this._pwmFreqToDiv(this.pwm2Freq);
 
 		var _pwm1a = Math.floor(65535 * this.pwm1a);
 		var _pwm1b = Math.floor(65535 * this.pwm1b);
@@ -208,11 +218,11 @@ class Monarco extends events.EventEmitter {
 		txbuf[19] = (_pwm2a >> 8) & 0xFF;
 
 		// analog output		
-		var ao1 = convertAnalogOutput(this.analogOutputs[0]);
+		var ao1 = this._convertAnalogOutput(this.analogOutputs[0]);
 		txbuf[20] = (ao1 >> 0) & 0xFF;
 		txbuf[21] = (ao1 >> 8) & 0xFF;
 
-		var ao2 = convertAnalogOutput(this.analogOutputs[1]);
+		var ao2 = this._convertAnalogOutput(this.analogOutputs[1]);
 		txbuf[22] = (ao2 >> 0) & 0xFF;
 		txbuf[23] = (ao2 >> 8) & 0xFF;
 
@@ -354,35 +364,35 @@ class Monarco extends events.EventEmitter {
 		this.serviceData[i].value = -1;
 		i++;
 	}
-}
 
-function convertAnalogOutput(dac) {
-	var out;
-	if (dac >= 10) {
-		this.emit('warn', 'Analog output is set to invalid value. Valid values are 0..10 V.');
-		out = 4095;
-	} else if (dac < 0) {
-		this.emit('warn', 'Analog output is set to invalid value. Valid values are 0..10 V.');
-		out = 0;
-	} else {
-		out = Math.floor(((dac * 4095) / 10));
+	_convertAnalogOutput(dac) {
+		var out = 0;
+		if (dac >= 10) {
+			this.emit('warn', 'Analog output is set to invalid value. Valid values are 0..10 V.');
+			out = 4095;
+		} else if (dac < 0) {
+			this.emit('warn', 'Analog output is set to invalid value. Valid values are 0..10 V.');
+			out = 0;
+		} else {
+			out = Math.floor(((dac * 4095) / 10));
+		}
+		return out;
 	}
-	return out;
-}
 
-function pwmFreqToDiv(freq) {
-	if (freq < 1) {
-		return 0;
-	} else if (freq < 10) {
-		return 3 + ((32000000 / 512 / freq) & 0xFFFC);
-	} else if (freq < 100) {
-		return 2 + ((32000000 / 64 / freq) & 0xFFFC);
-	} else if (freq < 1000) {
-		return 1 + ((32000000 / 8 / freq) & 0xFFFC);
-	} else if (freq < 100000) {
-		return 0 + ((32000000 / 1 / freq) & 0xFFFC);
-	} else {
-		return 0;
+	 _pwmFreqToDiv(freq) {
+		if (freq < 1) {
+			return 0;
+		} else if (freq < 10) {
+			return 3 + ((32000000 / 512 / freq) & 0xFFFC);
+		} else if (freq < 100) {
+			return 2 + ((32000000 / 64 / freq) & 0xFFFC);
+		} else if (freq < 1000) {
+			return 1 + ((32000000 / 8 / freq) & 0xFFFC);
+		} else if (freq < 100000) {
+			return 0 + ((32000000 / 1 / freq) & 0xFFFC);
+		} else {
+			return 0;
+		}
 	}
 }
 
