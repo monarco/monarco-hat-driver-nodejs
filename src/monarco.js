@@ -37,8 +37,6 @@ class Monarco extends events.EventEmitter {
 		this.pwm1Freq = 0;
 		this.pwm2Freq = 0;
 
-		this.ain1Mode = 1; // 1 -> 0-10[V]; 2 -> 0-20[mA]
-		this.ain2Mode = 1; // 1 -> 0-10[V]; 2 -> 0-20[mA]
 		this.inService = 0;
 		this.rs485_baudrate = 9600;
 		this.rs485_parity = 1; // 1:none; 2:even; 3:odd
@@ -103,7 +101,7 @@ class Monarco extends events.EventEmitter {
 
 				if (this._checkRxCrc(rxBuf)) {
 					var rxdata = new RxData();
-					rxdata.parse(rxBuf, this.ain1Mode, this.ain2Mode);
+					rxdata.parse(rxBuf, this.analogInputsInVoltageMode[0] ? 1 : 2, this.analogInputsInVoltageMode[1] ? 1 : 2);
 
 					if (this._currSvcTask) {
 						var svc = this.serviceData[this._currSvcTask.index];
