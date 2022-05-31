@@ -367,7 +367,7 @@ class Monarco extends events.EventEmitter {
 
 	_convertAnalogOutput(dac) {
 		var out = 0;
-		if (dac >= 10) {
+		if (dac > 10) {
 			this.emit('warn', 'Analog output is set to invalid value. Valid values are 0..10 V.');
 			out = 4095;
 		} else if (dac < 0) {
