@@ -20,6 +20,6 @@
   "license": "BSD 3-Clause License",
   "dependencies": {
     "crc": "^3.4.0",
-    "spi-device": "^2.0.0"
+    "spi-device": "^3.1.2"
   }
 }
