@@ -1,6 +1,6 @@
 {
   "name": "monarco-hat",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Node.js Library for Monarco HAT",
   "main": "./src/monarco.js",
   "scripts": {
@@ -20,6 +20,6 @@
   "license": "BSD 3-Clause License",
   "dependencies": {
     "crc": "^3.4.0",
-    "spi-device": "^2.0.0"
+    "spi-device": "^3.1.2"
   }
 }
